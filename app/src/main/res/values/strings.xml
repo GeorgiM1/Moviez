@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Moviez</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="movie_name">Movie name</string>
+    <string name="movie_rating">Movie Rating</string>
+    <string name="add_to_watchlist">Add to watchlist</string>
+    <string name="check_internet_title">No internet connection</string>
+    <string name="check_internet_message">There is no internet connection</string>
+    <string name="check_internet_settings">retry</string>
+    <string name="check_internet_cancel">Cancel</string>
+
+    <string-array name="drawer_items">
+        <item>Explore</item>
+        <item>Favorites</item>
+        <item>Rated</item>
+        <item>Watchlist</item>
+        <item>People</item>
+        <item>Login</item>
+    </string-array>
+
+</resources>
