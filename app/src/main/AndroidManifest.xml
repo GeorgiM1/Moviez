@@ -3,7 +3,7 @@
     package="com.example.android.moviez">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -26,13 +26,21 @@
             android:name=".Activity.FavoritesActivity"
             android:label="Favourites"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.RatedActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Activity.WatchlistActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Activity.PeopleActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+        <activity
+            android:name=".Activity.RatedActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.WatchlistActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.PeopleActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.MovieDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activity.LoginActivity" />
+        <activity android:name=".Activity.CastAndCrewActivity"
+                    android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

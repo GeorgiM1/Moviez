@@ -6,6 +6,7 @@
     <color name="Red">#d64242</color>
     <color name="Yellow">#ffcf40</color>
     <color name="LightGray">#686768</color>
+    <color name="colorPrimaryTrans">#833c3b3d</color>
 
 
 </resources>

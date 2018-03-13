@@ -18,6 +18,7 @@ import com.example.android.moviez.Adapters.ItemAdapter;
 import com.example.android.moviez.Api.RestApi;
 import com.example.android.moviez.Model.Model;
 import com.example.android.moviez.R;
+import com.example.android.moviez.other.PreferencesManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +37,8 @@ public class TopRatedFragment extends Fragment {
     @BindView(R.id.recycler)
     RecyclerView recyclerView;
     Model model;
+    Model favMovies;
+    Model watchlistMovies;
     RestApi api;
     @BindView(R.id.swipe)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -48,24 +51,20 @@ public class TopRatedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.global_fragment_layout, null);
         unbinder = ButterKnife.bind(this, view);
+        favMovies= PreferencesManager.getFavMovie(getActivity());
+        watchlistMovies= PreferencesManager.getWatchlistMovies(getActivity());
         api = new RestApi(getActivity());
 
 
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(false);
-                refreshRecycleView();
-            }
-        });
+
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(true);
                 refreshRecycleView();
 
             }
@@ -94,9 +93,12 @@ public class TopRatedFragment extends Fragment {
                                 if (response.isSuccessful()){
                                     model=response.body();
                                     itemAdapter = new ItemAdapter(getActivity(), model.getResults());
+                                    itemAdapter.setFav(favMovies);
+                                    itemAdapter.setWatchlistBody(watchlistMovies);
                                     if (mSearchBar.getText().length() >= 3){
                                         recyclerView.setAdapter(itemAdapter);
                                     }
+                                    itemAdapter.notifyDataSetChanged();
 
                                 }
 
@@ -128,7 +130,10 @@ public class TopRatedFragment extends Fragment {
 
                         model=response.body();
                         itemAdapter = new ItemAdapter(getActivity(), model.getResults());
+                        itemAdapter.setFav(favMovies);
+                        itemAdapter.setWatchlistBody(watchlistMovies);
                         recyclerView.setAdapter(itemAdapter);
+                        itemAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -163,11 +168,18 @@ public class TopRatedFragment extends Fragment {
 
                         model=response.body();
                         itemAdapter = new ItemAdapter(getActivity(), model.getResults());
+                        itemAdapter.setFav(favMovies);
+                        itemAdapter.setWatchlistBody(watchlistMovies);
                         recyclerView.setAdapter(itemAdapter);
+                        itemAdapter.notifyDataSetChanged();
+                        mSwipeRefreshLayout.setRefreshing(false);
+
                     }
 
                     @Override
                     public void onFailure(Call<Model> call, Throwable t) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+
 
                     }
                 });

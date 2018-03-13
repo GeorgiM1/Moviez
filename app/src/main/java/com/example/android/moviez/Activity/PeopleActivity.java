@@ -16,13 +16,19 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.android.moviez.Adapters.PeopleAdapter;
 import com.example.android.moviez.Api.RestApi;
 import com.example.android.moviez.Model.PeopleModel;
+import com.example.android.moviez.Model.UserModel;
 import com.example.android.moviez.R;
+import com.example.android.moviez.other.PreferencesManager;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +49,8 @@ public class PeopleActivity extends AppCompatActivity  implements NavigationView
     EditText mSearchBar;
     @BindView(R.id.swipe)
     SwipeRefreshLayout mSwipeRefresh;
+    UserModel userModel;
+    String session_id;
 
 
 
@@ -55,6 +63,7 @@ public class PeopleActivity extends AppCompatActivity  implements NavigationView
         ButterKnife.bind(this);
         setTitle("People");
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        session_id = PreferencesManager.getSessionId(this);
 
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -62,11 +71,39 @@ public class PeopleActivity extends AppCompatActivity  implements NavigationView
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        api = new RestApi(this);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View view = navigationView.getHeaderView(0);
+        final ImageView imageView =(ImageView) view.findViewById(R.id.imageView_drawer);
+        final TextView name = (TextView)view.findViewById(R.id.text_drawe);
+        final TextView username= (TextView) view.findViewById(R.id.textView_email);
+        if (session_id.length()>3){
+            api.checkInternet(new Runnable() {
+                @Override
+                public void run() {
+                    Call<UserModel> call = api.getUserModel(session_id);
+                    call.enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            userModel=response.body();
+                            String hash = userModel.getAvatar().getGravatar().getHash();
+                            Picasso.with(PeopleActivity.this).load("https://secure.gravatar.com/avatar/"+hash).centerCrop().fit().into(imageView);
 
-        api = new RestApi(this);
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+
+                        }
+                    });
+                }
+            });
+
+        }
+
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -145,6 +182,7 @@ public class PeopleActivity extends AppCompatActivity  implements NavigationView
 
 
 
+
     }
 
     @Override
@@ -191,7 +229,8 @@ public class PeopleActivity extends AppCompatActivity  implements NavigationView
             // Handle the camera action
         } else if (id == R.id.favorites) {
 
-            drawer.closeDrawers();
+            startActivity(new Intent(this, FavoritesActivity.class));
+            finish();
 
         } else if (id == R.id.rated) {
 
@@ -204,16 +243,15 @@ public class PeopleActivity extends AppCompatActivity  implements NavigationView
 
             Intent intent = new Intent(this, WatchlistActivity.class);
             startActivity(intent);
-            drawer.closeDrawers();
+            finish();
         } else if (id == R.id.people) {
 
-            Intent intent = new Intent(this, PeopleActivity.class);
-            startActivity(intent);
             drawer.closeDrawers();
 
         } else if (id == R.id.login) {
 
-            drawer.closeDrawers();
+           startActivity(new Intent(this, LoginActivity.class));
+           finish();
 
         }
 

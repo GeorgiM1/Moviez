@@ -13,7 +13,8 @@ import okhttp3.Request;
 public class RequestInterceptor implements Interceptor {
         public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
             Request request = chain.request();
-            HttpUrl url = request.url().newBuilder().addQueryParameter("api_key","adc8cf4fe60c9e74d4260be93bdda240").build();
+            HttpUrl url = request.url().newBuilder().addQueryParameter("api_key","adc8cf4fe60c9e74d4260be93bdda240")
+                    .setEncodedQueryParameter("Content-type","application/json").build();
             request = request.newBuilder().url(url).build();
             return chain.proceed(request);
         }
